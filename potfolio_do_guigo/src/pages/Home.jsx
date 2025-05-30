@@ -1,13 +1,68 @@
 import React from "react";
 import Tilt from "react-parallax-tilt";
 import { motion } from "framer-motion";
-import { FaGithub, FaLinkedin, FaTwitter, FaDownload } from "react-icons/fa";
-import profileImg from "../assets/foto_profissional.png"; // substitua pela sua imagem
+import {
+  FaGithub,
+  FaLinkedin,
+  FaTwitter,
+  FaDownload,
+  FaCode,
+  FaProjectDiagram,
+  FaLayerGroup,
+  FaGitAlt,
+} from "react-icons/fa";
+import profileImg from "../assets/foto_profissional.png";
+import AnimatedCounter from "../components/AnimatedCounter";
 
 const Home = () => {
+  const stats = [
+    {
+      label: "Anos de experiência",
+      end: 2,
+      icon: <FaCode />,
+      tooltip: "Tempo desde que comecei profissionalmente a desenvolver",
+    },
+    {
+      label: "Projetos finalizados",
+      end: 10,
+      icon: <FaProjectDiagram />,
+      tooltip: "Projetos concluídos com sucesso",
+    },
+    {
+      label: "Tecnologias dominadas",
+      end: 8,
+      icon: <FaLayerGroup />,
+      tooltip: "Stacks que domino com segurança",
+    },
+    {
+      label: "Commits de código",
+      end: 625,
+      icon: <FaGitAlt />,
+      tooltip: "Commits públicos realizados em projetos Git",
+    },
+  ];
+
   return (
-    <section className="min-h-screen bg-[#fffffe] text-[#094067] flex flex-col justify-center items-center px-6 py-12">
-      <div className="w-full max-w-6xl grid md:grid-cols-2 items-center gap-12">
+    <section className="relative min-h-screen bg-[#fffffe] text-[#094067] flex flex-col justify-center items-center px-6 py-12 overflow-hidden">
+      {/* Background animado */}
+      <motion.div
+        className="absolute top-0 left-0 w-full h-full z-0"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.05 }}
+        transition={{ duration: 2 }}
+      >
+        <svg width="100%" height="100%">
+          <defs>
+            <radialGradient id="grad1" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#3da9fc" />
+              <stop offset="100%" stopColor="transparent" />
+            </radialGradient>
+          </defs>
+          <circle cx="50%" cy="50%" r="400" fill="url(#grad1)" />
+        </svg>
+      </motion.div>
+
+      <div className="w-full max-w-6xl grid md:grid-cols-2 items-center gap-12 z-10">
         {/* Texto à esquerda */}
         <motion.div
           initial={{ x: -50, opacity: 0 }}
@@ -58,15 +113,14 @@ const Home = () => {
           </div>
         </motion.div>
 
-        {/* Foto à direita com efeito Tilt */}
+        {/* Foto com Tilt */}
         <motion.div
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex justify-center"
+          className="flex justify-center z-10"
         >
           <div className="relative w-60 h-60 sm:w-72 sm:h-72 flex items-center justify-center">
-            {/* Halo rotativo removido */}
             <motion.div
               animate={{
                 rotate: 360,
@@ -79,7 +133,6 @@ const Home = () => {
               className="absolute w-[110%] h-[110%] rounded-full border-2 border-dashed border-transparent opacity-30 pointer-events-none"
             ></motion.div>
 
-            {/* Efeito Tilt com imagem sem bordas */}
             <Tilt
               tiltMaxAngleX={20}
               tiltMaxAngleY={20}
@@ -100,26 +153,33 @@ const Home = () => {
       {/* Estatísticas */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
         transition={{ delay: 0.8 }}
-        className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center"
+        className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center z-10"
       >
-        <div>
-          <h2 className="text-3xl font-bold text-[#094067]">2</h2>
-          <p className="text-sm text-[#5f6c7b]">Anos de experiência</p>
-        </div>
-        <div>
-          <h2 className="text-3xl font-bold text-[#094067]">10</h2>
-          <p className="text-sm text-[#5f6c7b]">Projetos finalizados</p>
-        </div>
-        <div>
-          <h2 className="text-3xl font-bold text-[#094067]">8</h2>
-          <p className="text-sm text-[#5f6c7b]">Tecnologias dominadas</p>
-        </div>
-        <div>
-          <h2 className="text-3xl font-bold text-[#094067]">625</h2>
-          <p className="text-sm text-[#5f6c7b]">Commits de código</p>
-        </div>
+        {stats.map((item, i) => (
+          <motion.div
+            key={i}
+            className="group bg-white hover:bg-[#e0f2ff] rounded-lg py-6 px-4 shadow transition duration-300 hover:scale-105 relative"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: i * 0.2 }}
+          >
+            <div className="text-3xl mb-2 text-[#3da9fc] mx-auto">
+              {item.icon}
+            </div>
+            <AnimatedCounter end={item.end} />
+            <p className="text-sm text-[#5f6c7b] mt-1 group-hover:text-[#3da9fc] transition">
+              {item.label}
+            </p>
+
+            {/* Tooltip */}
+            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-[#3da9fc] text-white text-xs rounded px-3 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none">
+              {item.tooltip}
+            </div>
+          </motion.div>
+        ))}
       </motion.div>
     </section>
   );

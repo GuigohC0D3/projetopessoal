@@ -61,11 +61,26 @@ const Resume = () => {
             whileTap={{ scale: 0.98 }}
             className="relative cursor-pointer group"
           >
-            <div className="absolute -left-5 top-1.5 w-3 h-3 bg-[#3da9fc] rounded-full group-hover:scale-125 transition-transform"></div>
+            {/* 🔁 Bolinha com animação contínua */}
+            <motion.div
+              animate={{
+                scale: [1, 1.3, 1],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="absolute -left-5 top-1.5 w-3 h-3 bg-[#3da9fc] rounded-full shadow-md"
+            ></motion.div>
 
             <div className="ml-4 bg-white border-l-4 border-[#3da9fc] pl-6 py-4 rounded shadow-md group-hover:shadow-lg transition-all duration-300">
               <h4 className="text-lg font-bold flex items-center gap-2 group-hover:text-[#3da9fc]">
-                {item.type === "experience" ? <FaBriefcase /> : <FaGraduationCap />}
+                {item.type === "experience" ? (
+                  <FaBriefcase />
+                ) : (
+                  <FaGraduationCap />
+                )}
                 {item.title}
               </h4>
               <p className="text-sm text-[#5f6c7b]">{item.company}</p>
