@@ -11,6 +11,8 @@ import {
   FaLayerGroup,
   FaGitAlt,
 } from "react-icons/fa";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
 import profileImg from "../assets/foto_profissional.png";
 import AnimatedCounter from "../components/AnimatedCounter";
 
@@ -42,25 +44,59 @@ const Home = () => {
     },
   ];
 
+  const particlesInit = async (main) => {
+    await loadFull(main);
+  };
+
   return (
     <section className="relative min-h-screen bg-[#fffffe] text-[#094067] flex flex-col justify-center items-center px-6 py-12 overflow-hidden">
-      {/* Background animado */}
-      <motion.div
+      {/* Background Particles */}
+      <Particles
+        id="tsparticles"
+        init={particlesInit}
         className="absolute top-0 left-0 w-full h-full z-0"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.05 }}
-        transition={{ duration: 2 }}
-      >
-        <svg width="100%" height="100%">
-          <defs>
-            <radialGradient id="grad1" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#3da9fc" />
-              <stop offset="100%" stopColor="transparent" />
-            </radialGradient>
-          </defs>
-          <circle cx="50%" cy="50%" r="400" fill="url(#grad1)" />
-        </svg>
-      </motion.div>
+        options={{
+          background: {
+            color: { value: "#fffffe" },
+          },
+          fpsLimit: 60,
+          interactivity: {
+            events: {
+              onClick: { enable: true, mode: "push" },
+              onHover: { enable: true, mode: "repulse" },
+              resize: true,
+            },
+            modes: {
+              push: { quantity: 4 },
+              repulse: { distance: 100, duration: 0.4 },
+            },
+          },
+          particles: {
+            color: { value: "#3da9fc" },
+            links: {
+              color: "#3da9fc",
+              distance: 150,
+              enable: true,
+              opacity: 0.5,
+              width: 1,
+            },
+            collisions: { enable: true },
+            move: {
+              direction: "none",
+              enable: true,
+              outModes: { default: "bounce" },
+              random: false,
+              speed: 2,
+              straight: false,
+            },
+            number: { density: { enable: true, area: 800 }, value: 60 },
+            opacity: { value: 0.4 },
+            shape: { type: "circle" },
+            size: { value: { min: 1, max: 4 } },
+          },
+          detectRetina: true,
+        }}
+      />
 
       <div className="w-full max-w-6xl grid md:grid-cols-2 items-center gap-12 z-10">
         {/* Texto à esquerda */}
@@ -81,7 +117,7 @@ const Home = () => {
             technologies. Let's build something amazing together!
           </p>
 
-          <div className="flex gap-4 mt-6 justify-center md:justify-start flex-wrap">
+          <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 mt-6">
             <a
               href="/cv-guigo.pdf"
               download
@@ -89,27 +125,29 @@ const Home = () => {
             >
               <FaDownload /> Download CV
             </a>
-            <a
-              href="https://github.com/GuigohC0D3"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <FaGithub className="text-xl text-[#094067] hover:text-[#3da9fc] transition" />
-            </a>
-            <a
-              href="https://linkedin.com/in/seuusuario"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <FaLinkedin className="text-xl text-[#094067] hover:text-[#3da9fc] transition" />
-            </a>
-            <a
-              href="https://twitter.com/seuusuario"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <FaTwitter className="text-xl text-[#094067] hover:text-[#3da9fc] transition" />
-            </a>
+            <div className="flex gap-4 items-center">
+              <a
+                href="https://github.com/GuigohC0D3"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FaGithub className="text-xl text-[#094067] hover:text-[#3da9fc] transition" />
+              </a>
+              <a
+                href="https://linkedin.com/in/seuusuario"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FaLinkedin className="text-xl text-[#094067] hover:text-[#3da9fc] transition" />
+              </a>
+              <a
+                href="https://twitter.com/seuusuario"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FaTwitter className="text-xl text-[#094067] hover:text-[#3da9fc] transition" />
+              </a>
+            </div>
           </div>
         </motion.div>
 
@@ -122,17 +160,10 @@ const Home = () => {
         >
           <div className="relative w-60 h-60 sm:w-72 sm:h-72 flex items-center justify-center">
             <motion.div
-              animate={{
-                rotate: 360,
-                transition: {
-                  repeat: Infinity,
-                  duration: 10,
-                  ease: "linear",
-                },
-              }}
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
               className="absolute w-[110%] h-[110%] rounded-full border-2 border-dashed border-transparent opacity-30 pointer-events-none"
-            ></motion.div>
-
+            />
             <Tilt
               tiltMaxAngleX={20}
               tiltMaxAngleY={20}
@@ -173,8 +204,6 @@ const Home = () => {
             <p className="text-sm text-[#5f6c7b] mt-1 group-hover:text-[#3da9fc] transition">
               {item.label}
             </p>
-
-            {/* Tooltip */}
             <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-[#3da9fc] text-white text-xs rounded px-3 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none">
               {item.tooltip}
             </div>
