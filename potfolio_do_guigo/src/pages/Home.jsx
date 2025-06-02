@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Tilt from "react-parallax-tilt";
 import { motion } from "framer-motion";
 import {
@@ -11,12 +11,44 @@ import {
   FaLayerGroup,
   FaGitAlt,
 } from "react-icons/fa";
-import Particles from "react-tsparticles";
-import { loadFull } from "tsparticles";
+import * as THREE from "three";
+// @ts-ignore
+import NET from "vanta/src/vanta.net"; // Aqui trocamos de BIRDS para NET
 import profileImg from "../assets/foto_profissional.png";
 import AnimatedCounter from "../components/AnimatedCounter";
 
 const Home = () => {
+  const vantaRef = useRef(null);
+  const vantaEffect = useRef(null);
+
+  useEffect(() => {
+    if (!vantaEffect.current && vantaRef.current) {
+      vantaEffect.current = NET({
+        el: vantaRef.current,
+        THREE,
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.0,
+        minWidth: 200.0,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        color: 0x3da9fc,
+        backgroundColor: 0x094067,
+        points: 10.0,
+        maxDistance: 20.0,
+        spacing: 15.0,
+      });
+    }
+
+    return () => {
+      if (vantaEffect.current) {
+        vantaEffect.current.destroy();
+        vantaEffect.current = null;
+      }
+    };
+  }, []);
+
   const stats = [
     {
       label: "Anos de experiência",
@@ -44,82 +76,33 @@ const Home = () => {
     },
   ];
 
-  const particlesInit = async (main) => {
-    await loadFull(main);
-  };
-
   return (
-    <section className="relative min-h-screen bg-[#fffffe] text-[#094067] flex flex-col justify-center items-center px-6 py-12 overflow-hidden">
-      {/* Background Particles */}
-      <Particles
-        id="tsparticles"
-        init={particlesInit}
-        className="absolute top-0 left-0 w-full h-full z-0"
-        options={{
-          background: {
-            color: { value: "#fffffe" },
-          },
-          fpsLimit: 60,
-          interactivity: {
-            events: {
-              onClick: { enable: true, mode: "push" },
-              onHover: { enable: true, mode: "repulse" },
-              resize: true,
-            },
-            modes: {
-              push: { quantity: 4 },
-              repulse: { distance: 100, duration: 0.4 },
-            },
-          },
-          particles: {
-            color: { value: "#3da9fc" },
-            links: {
-              color: "#3da9fc",
-              distance: 150,
-              enable: true,
-              opacity: 0.5,
-              width: 1,
-            },
-            collisions: { enable: true },
-            move: {
-              direction: "none",
-              enable: true,
-              outModes: { default: "bounce" },
-              random: false,
-              speed: 2,
-              straight: false,
-            },
-            number: { density: { enable: true, area: 800 }, value: 60 },
-            opacity: { value: 0.4 },
-            shape: { type: "circle" },
-            size: { value: { min: 1, max: 4 } },
-          },
-          detectRetina: true,
-        }}
-      />
+    <section className="relative min-h-screen text-[#094067] flex flex-col justify-center items-center px-6 py-12 overflow-hidden">
+      {/* 🔹 Fundo animado NET */}
+      <div ref={vantaRef} className="absolute inset-0 -z-20" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#094067]/80 to-[#094067]/90 -z-10 pointer-events-none" />
 
-      <div className="w-full max-w-6xl grid md:grid-cols-2 items-center gap-12 z-10">
-        {/* Texto à esquerda */}
+      <div className="relative w-full max-w-6xl grid md:grid-cols-2 items-center gap-12 z-10">
         <motion.div
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
           className="text-center md:text-left"
         >
-          <p className="text-sm uppercase tracking-widest text-[#5f6c7b]">
+          <p className="text-sm uppercase tracking-widest text-[#ffffff]">
             Software Developer
           </p>
-          <h1 className="text-4xl sm:text-5xl font-bold mt-2">
+          <h1 className="text-4xl  text-[#137dce] sm:text-5xl font-bold mt-2">
             Hello I'm <span className="text-[#3da9fc]">Guilherme</span>
           </h1>
-          <p className="text-[#5f6c7b] mt-4 max-w-md mx-auto md:mx-0">
+          <p className="text-[#ffffff] mt-4 max-w-md mx-auto md:mx-0">
             I create elegant and functional web applications using modern
             technologies. Let's build something amazing together!
           </p>
 
-          <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 mt-6">
+          <div className="flex justify-center md:justify-start flex-wrap items-center gap-4 mt-6">
             <a
-              href="/cv-guigo.pdf"
+              href="/Guilherme-Ancheschi-Werneck-Pereira-Curriculo.pdf"
               download
               className="flex items-center gap-2 px-6 py-2 border border-[#3da9fc] text-[#3da9fc] rounded hover:bg-[#3da9fc] hover:text-white transition"
             >
@@ -151,7 +134,6 @@ const Home = () => {
           </div>
         </motion.div>
 
-        {/* Foto com Tilt */}
         <motion.div
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -181,13 +163,12 @@ const Home = () => {
         </motion.div>
       </div>
 
-      {/* Estatísticas */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay: 0.8 }}
-        className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center z-10"
+        className="relative mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center z-10"
       >
         {stats.map((item, i) => (
           <motion.div
