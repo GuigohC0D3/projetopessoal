@@ -3,37 +3,58 @@ import { motion } from "framer-motion";
 import { FaBriefcase, FaGraduationCap } from "react-icons/fa";
 
 const resumeData = [
+  // EXPERIÊNCIAS
   {
     type: "experience",
-    title: "Desenvolvedor Front-End",
-    company: "Tech Solutions",
-    period: "Jan 2023 - Atual",
+    title: "Estagiário em Desenvolvimento de Software",
+    company: "Nazária Distribuidora de Farmacêuticos – Grupo Jorge Batista",
+    period: "2024 - Atual",
     description:
-      "Desenvolvimento de interfaces modernas com React, integração de APIs REST e foco em performance e acessibilidade.",
+      "Atuação como desenvolvedor Full Stack em projetos internos, com foco em sistemas corporativos (como sistema de Comandas para o Clube ARJOB), utilizando React, Next.js, TypeScript, Flask, PostgreSQL, Git, Docker e boas práticas de engenharia de software.",
   },
   {
     type: "experience",
-    title: "Estagiário em Desenvolvimento Web",
-    company: "Dev Company",
-    period: "Jun 2022 - Dez 2022",
+    title: "Desenvolvedor Web (Projetos Pessoais e Freelancers)",
+    company: "Projetos autorais e landing pages para clientes",
+    period: "2021 - Atual",
     description:
-      "Suporte na criação de componentes reutilizáveis e páginas responsivas com React e Tailwind.",
+      "Desenvolvimento de aplicações web e mobile, incluindo portfólio pessoal, sistemas de controle de comandas, landing pages para clientes e o app BibigoAirplane, utilizando React, Vue, Next.js, Flutter, Tailwind, Shadcn/ui e integração com APIs.",
+  },
+
+    // CURSOS E FORMAÇÕES COMPLEMENTARES
+  {
+    type: "education",
+    title: "Python 3: Algoritmos, POO, Testes, TDD e Design Patterns",
+    company: "Udemy",
+    period: "Carga horária: 141h",
+    description:
+      "Formação focada em desenvolvimento Back-End com Python, cobrindo lógica, orientação a objetos, testes automatizados, TDD e padrões de projeto.",
   },
   {
     type: "education",
-    title: "Análise e Desenvolvimento de Sistemas",
-    company: "Faculdade de Tecnologia",
-    period: "2021 - 2023",
+    title: "Formações em Desenvolvimento Web, Git, Docker e Lógica",
+    company: "Alura",
+    period: "Diversos cursos entre 2022 - 2024",
     description:
-      "Foco em desenvolvimento web, banco de dados, lógica de programação e boas práticas de engenharia de software.",
+      "Cursos de Git e GitHub, Docker, lógica de programação com JavaScript, desenvolvimento pessoal e carreira em Back-End Python, além de participação em eventos como DNT e Oracle ONE.",
+  },
+
+  // FORMAÇÃO
+  {
+    type: "education",
+    title: "Engenharia de Software",
+    company: "Faculdade ICEV – 5º período",
+    period: "2021 - Atual",
+    description:
+      "Graduação com foco em desenvolvimento web, bancos de dados, lógica de programação, POO, estrutura de dados, boas práticas de engenharia de software e projetos aplicados ao mercado.",
   },
   {
     type: "education",
-    title: "Curso de React Avançado",
-    company: "Rocketseat",
-    period: "2022",
+    title: "Ensino Médio",
+    company: "Unidade Escolar Colégio Impacto",
+    period: "Concluído em 2020",
     description:
-      "Hooks, Context API, Styled Components, e projetos práticos com integração de APIs.",
+      "Conclusão do Ensino Médio com base sólida em matemática, lógica e raciocínio crítico, que serviram de base para a área de tecnologia.",
   },
 ];
 
@@ -61,7 +82,7 @@ const Resume = () => {
             whileTap={{ scale: 0.98 }}
             className="relative cursor-pointer group"
           >
-            {/* 🔁 Bolinha com animação contínua */}
+            {/* Bolinha animada da timeline */}
             <motion.div
               animate={{
                 scale: [1, 1.3, 1],
@@ -76,11 +97,7 @@ const Resume = () => {
 
             <div className="ml-4 bg-white border-l-4 border-[#3da9fc] pl-6 py-4 rounded shadow-md group-hover:shadow-lg transition-all duration-300">
               <h4 className="text-lg font-bold flex items-center gap-2 group-hover:text-[#3da9fc]">
-                {item.type === "experience" ? (
-                  <FaBriefcase />
-                ) : (
-                  <FaGraduationCap />
-                )}
+                {item.type === "experience" ? <FaBriefcase /> : <FaGraduationCap />}
                 {item.title}
               </h4>
               <p className="text-sm text-[#5f6c7b]">{item.company}</p>
