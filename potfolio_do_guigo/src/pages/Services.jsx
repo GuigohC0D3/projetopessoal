@@ -1,32 +1,57 @@
 import React from "react";
 import Tilt from "react-parallax-tilt";
 import { motion } from "framer-motion";
-import { FaCode, FaMobileAlt, FaPaintBrush, FaDatabase } from "react-icons/fa";
+import {
+  FaCode,
+  FaMobileAlt,
+  FaPaintBrush,
+  FaDatabase,
+  FaShieldAlt,
+  FaLock,
+} from "react-icons/fa";
 
 const services = [
   {
     title: "Desenvolvimento Web",
-    description: "Criação de aplicações modernas, performáticas e escaláveis usando React e tecnologias de ponta.",
+    description:
+      "Criação de aplicações modernas, performáticas e escaláveis usando React, Next.js e TypeScript.",
     icon: <FaCode />,
     color: "#3da9fc",
   },
   {
     title: "Design Responsivo",
-    description: "Layouts que se adaptam perfeitamente a todos os dispositivos, priorizando UX e acessibilidade.",
+    description:
+      "Layouts que se adaptam perfeitamente a todos os dispositivos, priorizando UX e acessibilidade.",
     icon: <FaMobileAlt />,
     color: "#ef4565",
   },
   {
     title: "UI/UX Design",
-    description: "Interfaces intuitivas e visualmente atraentes com foco no usuário e consistência de marca.",
+    description:
+      "Interfaces intuitivas e visualmente atraentes com foco no usuário e consistência de marca.",
     icon: <FaPaintBrush />,
     color: "#fca311",
   },
   {
     title: "APIs e Banco de Dados",
-    description: "Integrações com APIs REST/GraphQL e gerenciamento eficiente de dados com bancos modernos.",
+    description:
+      "Integrações com APIs REST/GraphQL e gerenciamento eficiente de dados com bancos modernos como PostgreSQL.",
     icon: <FaDatabase />,
     color: "#00b894",
+  },
+  {
+    title: "Segurança em Aplicações Web",
+    description:
+      "Análise e mitigação de vulnerabilidades em aplicações web, seguindo boas práticas e referências como OWASP Top 10.",
+    icon: <FaShieldAlt />,
+    color: "#ef4565",
+  },
+  {
+    title: "Boas Práticas em Cyber Security",
+    description:
+      "Orientação em políticas de segurança, autenticação segura, senhas fortes, backups e proteção de dados sensíveis.",
+    icon: <FaLock />,
+    color: "#5f6c7b",
   },
 ];
 
@@ -42,7 +67,7 @@ const Services = () => {
         Meus <span className="text-[#3da9fc]">Serviços</span>
       </motion.h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 w-full max-w-6xl">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-6xl">
         {services.map((service, index) => (
           <motion.div
             key={index}
@@ -62,7 +87,10 @@ const Services = () => {
               <div className="flex flex-col items-center text-center space-y-4">
                 <div
                   className="text-4xl p-4 rounded-full"
-                  style={{ backgroundColor: `${service.color}20`, color: service.color }}
+                  style={{
+                    backgroundColor: `${service.color}20`,
+                    color: service.color,
+                  }}
                 >
                   {service.icon}
                 </div>
