@@ -1,111 +1,159 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { FaBriefcase, FaGraduationCap } from "react-icons/fa";
+import * as THREE from "three";
+// @ts-ignore
+import NET from "vanta/src/vanta.net";
 
 const resumeData = [
-  // EXPERIÊNCIAS
+  // EXPERIENCE
   {
     type: "experience",
-    title: "Estagiário em Desenvolvimento de Software",
-    company: "Nazária Distribuidora de Farmacêuticos – Grupo Jorge Batista",
-    period: "2024 - Atual",
+    title: "Software Development Intern",
+    company:
+      "Nazária Distribuidora de Farmacêuticos – Grupo Jorge Batista",
+    period: "2024 - Present",
     description:
-      "Atuação como desenvolvedor Full Stack em projetos internos, com foco em sistemas corporativos (como sistema de Comandas para o Clube ARJOB), utilizando React, Next.js, TypeScript, Flask, PostgreSQL, Git, Docker e boas práticas de engenharia de software.",
+      "Full Stack developer in internal corporate projects, such as the ordering system for ARJOB Club, using React, Next.js, TypeScript, Flask, PostgreSQL, Git, Docker and software engineering best practices.",
   },
   {
     type: "experience",
-    title: "Desenvolvedor Web (Projetos Pessoais e Freelancers)",
-    company: "Projetos autorais e landing pages para clientes",
-    period: "2021 - Atual",
+    title: "Web Developer (Personal Projects & Freelance)",
+    company: "Own projects and landing pages for clients",
+    period: "2021 - Present",
     description:
-      "Desenvolvimento de aplicações web e mobile, incluindo portfólio pessoal, sistemas de controle de comandas, landing pages para clientes e o app BibigoAirplane, utilizando React, Vue, Next.js, Flutter, Tailwind, Shadcn/ui e integração com APIs.",
+      "Development of web and mobile applications, including personal portfolio, ordering and tab management systems, landing pages for clients and the BibigoAirplane app, using React, Vue, Next.js, Flutter, Tailwind, Shadcn/UI and API integrations.",
   },
 
-    // CURSOS E FORMAÇÕES COMPLEMENTARES
+  // COURSES & COMPLEMENTARY EDUCATION
   {
     type: "education",
-    title: "Python 3: Algoritmos, POO, Testes, TDD e Design Patterns",
+    title: "Python 3: Algorithms, OOP, Tests, TDD and Design Patterns",
     company: "Udemy",
-    period: "Carga horária: 141h",
+    period: "Workload: 141 hours",
     description:
-      "Formação focada em desenvolvimento Back-End com Python, cobrindo lógica, orientação a objetos, testes automatizados, TDD e padrões de projeto.",
+      "Training focused on Back-End development with Python, covering logic, object-oriented programming, automated tests, TDD and design patterns.",
   },
   {
     type: "education",
-    title: "Formações em Desenvolvimento Web, Git, Docker e Lógica",
+    title: "Web Development, Git, Docker and Logic Tracks",
     company: "Alura",
-    period: "Diversos cursos entre 2022 - 2024",
+    period: "Several courses between 2022 - 2024",
     description:
-      "Cursos de Git e GitHub, Docker, lógica de programação com JavaScript, desenvolvimento pessoal e carreira em Back-End Python, além de participação em eventos como DNT e Oracle ONE.",
+      "Courses on Git and GitHub, Docker, programming logic with JavaScript, personal development and Back-End career with Python, plus participation in events such as DNT and Oracle ONE.",
   },
 
-  // FORMAÇÃO
+  // FORMAL EDUCATION
   {
     type: "education",
-    title: "Engenharia de Software",
-    company: "Faculdade ICEV – 5º período",
-    period: "2021 - Atual",
+    title: "Software Engineering",
+    company: "ICEV College – 6th semester",
+    period: "2021 - Present",
     description:
-      "Graduação com foco em desenvolvimento web, bancos de dados, lógica de programação, POO, estrutura de dados, boas práticas de engenharia de software e projetos aplicados ao mercado.",
+      "Bachelor’s degree focused on web development, databases, programming logic, OOP, data structures, software engineering best practices and real-world projects.",
   },
   {
     type: "education",
-    title: "Ensino Médio",
-    company: "Unidade Escolar Colégio Impacto",
-    period: "Concluído em 2020",
+    title: "High School",
+    company: "Colégio Impacto",
+    period: "Finished in 2020",
     description:
-      "Conclusão do Ensino Médio com base sólida em matemática, lógica e raciocínio crítico, que serviram de base para a área de tecnologia.",
+      "High school completed with a strong base in math, logic and critical thinking, which helped a lot in the technology path.",
   },
 ];
 
 const Resume = () => {
+  const vantaRef = useRef(null);
+  const vantaEffect = useRef(null);
+
+  useEffect(() => {
+    if (!vantaRef.current) return;
+    if (vantaEffect.current) return;
+
+    vantaEffect.current = NET({
+      el: vantaRef.current,
+      THREE,
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.0,
+      minWidth: 200.0,
+      scale: 1.0,
+      scaleMobile: 1.0,
+      color: 0x3da9fc,
+      backgroundColor: 0x094067,
+      points: 10.0,
+      maxDistance: 20.0,
+      spacing: 15.0,
+    });
+
+    return () => {
+      if (vantaEffect.current) {
+        vantaEffect.current.destroy();
+        vantaEffect.current = null;
+      }
+    };
+  }, [vantaRef]);
+
   return (
-    <section className="min-h-screen bg-[#fffffe] text-[#094067] px-6 py-16">
-      <motion.h2
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-4xl font-bold text-center mb-12"
-      >
-        Meu <span className="text-[#3da9fc]">Currículo</span>
-      </motion.h2>
+    <section className="relative min-h-screen text-[#094067] px-6 py-16 overflow-hidden">
+      {/* Vanta NET background + gradient */}
+      <div ref={vantaRef} className="absolute inset-0 -z-20" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#094067]/80 to-[#094067]/90 -z-10 pointer-events-none" />
 
-      <div className="relative max-w-4xl mx-auto pl-6 border-l-4 border-[#3da9fc] space-y-12">
-        {resumeData.map((item, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
-            whileHover={{ scale: 1.03, rotate: 0.5 }}
-            whileTap={{ scale: 0.98 }}
-            className="relative cursor-pointer group"
-          >
-            {/* Bolinha animada da timeline */}
+      <div className="relative max-w-4xl mx-auto z-10">
+        <motion.h2
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-4xl font-bold text-center mb-12 text-white py-8"
+        >
+          My <span className="text-[#3da9fc]">Resume</span>
+        </motion.h2>
+
+        <div className="relative pl-6 border-l-4 border-[#3da9fc] space-y-12">
+          {resumeData.map((item, index) => (
             <motion.div
-              animate={{
-                scale: [1, 1.3, 1],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="absolute -left-5 top-1.5 w-3 h-3 bg-[#3da9fc] rounded-full shadow-md"
-            ></motion.div>
+              key={index}
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              whileHover={{ scale: 1.03, rotate: 0.5 }}
+              whileTap={{ scale: 0.98 }}
+              className="relative cursor-pointer group"
+            >
+              {/* animated timeline dot */}
+              <motion.div
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute -left-5 top-1.5 w-3 h-3 bg-[#3da9fc] rounded-full shadow-md"
+              />
 
-            <div className="ml-4 bg-white border-l-4 border-[#3da9fc] pl-6 py-4 rounded shadow-md group-hover:shadow-lg transition-all duration-300">
-              <h4 className="text-lg font-bold flex items-center gap-2 group-hover:text-[#3da9fc]">
-                {item.type === "experience" ? <FaBriefcase /> : <FaGraduationCap />}
-                {item.title}
-              </h4>
-              <p className="text-sm text-[#5f6c7b]">{item.company}</p>
-              <p className="text-sm italic text-[#5f6c7b]">{item.period}</p>
-              <p className="text-sm mt-2 text-[#5f6c7b]">{item.description}</p>
-            </div>
-          </motion.div>
-        ))}
+              <div className="ml-4 bg-white/95 border-l-4 border-[#3da9fc] pl-6 py-4 rounded shadow-md group-hover:shadow-lg transition-all duration-300">
+                <h4 className="text-lg font-bold flex items-center gap-2 group-hover:text-[#3da9fc]">
+                  {item.type === "experience" ? (
+                    <FaBriefcase />
+                  ) : (
+                    <FaGraduationCap />
+                  )}
+                  {item.title}
+                </h4>
+                <p className="text-sm text-[#5f6c7b]">{item.company}</p>
+                <p className="text-sm italic text-[#5f6c7b]">
+                  {item.period}
+                </p>
+                <p className="text-sm mt-2 text-[#5f6c7b]">
+                  {item.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
