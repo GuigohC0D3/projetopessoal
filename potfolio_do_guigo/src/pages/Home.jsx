@@ -70,7 +70,7 @@ const Home = () => {
     },
     {
       label: "Code Commits",
-      end: 625,
+      end: 683,
       icon: <FaGitAlt />,
       tooltip: "Public commits made across my Git repositories",
     },
