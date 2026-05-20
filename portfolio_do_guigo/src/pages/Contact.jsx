@@ -128,7 +128,9 @@ const Contact = () => {
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         {
+          nome:       data.get("user_name"),
           user_name:  data.get("user_name"),
+          email:      data.get("user_email"),
           user_email: data.get("user_email"),
           subject:    data.get("subject"),
           message:    data.get("message"),
