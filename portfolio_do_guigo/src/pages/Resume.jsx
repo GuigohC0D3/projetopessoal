@@ -1,117 +1,139 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { FaBriefcase, FaGraduationCap } from "react-icons/fa";
-import * as THREE from "three";
-// @ts-ignore
-import NET from "vanta/src/vanta.net";
+import { FaBriefcase, FaGraduationCap, FaCertificate } from "react-icons/fa";
+import {
+  SiReact, SiNextdotjs, SiVuedotjs, SiTypescript, SiJavascript, SiTailwindcss,
+  SiFlutter, SiDart,
+  SiNodedotjs, SiNestjs, SiPython, SiFastapi, SiFlask, SiDjango, SiPrisma,
+  SiPostgresql, SiFirebase,
+  SiDocker, SiGooglecloud,
+  SiGit, SiGithub, SiPostman, SiFigma, SiLinux,
+} from "react-icons/si";
 
 const resumeData = [
-  // EXPERIENCE
   {
     type: "experience",
-    title: "Software Development Intern",
-    company:
-      "Nazária Distribuidora de Farmacêuticos – Grupo Jorge Batista",
-    period: "2024 - Present",
+    title: "Technology Intern",
+    company: "Nazária Distribuidora — BEES B2B (Ambev)",
+    period: "Aug 2024 – present · Scrum/Kanban",
+    tags: ["Python", "Django", "Django REST Framework", "APScheduler", "Pytest"],
     description:
-      "Full Stack developer in internal corporate projects, such as the ordering system for ARJOB Club, using React, Next.js, TypeScript, Flask, PostgreSQL, Git, Docker and software engineering best practices.",
-  },
-  {
-    type: "experience",
-    title: "Web Developer (Personal Projects & Freelance)",
-    company: "Own projects and landing pages for clients",
-    period: "2021 - Present",
-    description:
-      "Development of web and mobile applications, including personal portfolio, ordering and tab management systems, landing pages for clients and the BibigoAirplane app, using React, Vue, Next.js, Flutter, Tailwind, Shadcn/UI and API integrations.",
-  },
-
-  // COURSES & COMPLEMENTARY EDUCATION
-  {
-    type: "education",
-    title: "Python 3: Algorithms, OOP, Tests, TDD and Design Patterns",
-    company: "Udemy",
-    period: "Workload: 141 hours",
-    description:
-      "Training focused on Back-End development with Python, covering logic, object-oriented programming, automated tests, TDD and design patterns.",
+      "Developed modules for the B2B BEES platform used by Ambev distributors nationwide: account management, dynamic delivery windows (delivery_window) and KPI flexibility (force_flexible_kpi). Delivered in production with professional code standards alongside a third-party team.",
   },
   {
     type: "education",
-    title: "Web Development, Git, Docker and Logic Tracks",
-    company: "Alura",
-    period: "Several courses between 2022 - 2024",
+    title: "Software Engineering — 7th Semester",
+    company: "Faculdade ICEV",
+    period: "2021 – present",
+    tags: [],
     description:
-      "Courses on Git and GitHub, Docker, programming logic with JavaScript, personal development and Back-End career with Python, plus participation in events such as DNT and Oracle ONE.",
-  },
-
-  // FORMAL EDUCATION
-  {
-    type: "education",
-    title: "Software Engineering",
-    company: "ICEV College – 6th semester",
-    period: "2021 - Present",
-    description:
-      "Bachelor’s degree focused on web development, databases, programming logic, OOP, data structures, software engineering best practices and real-world projects.",
+      "Bachelor's degree focused on software architecture, databases, OOP, data structures and real-world engineering projects.",
   },
   {
     type: "education",
     title: "High School",
     company: "Colégio Impacto",
     period: "Finished in 2020",
-    description:
-      "High school completed with a strong base in math, logic and critical thinking, which helped a lot in the technology path.",
+    tags: [],
+    description: "Strong foundation in logic and critical thinking that shaped the technology path.",
+  },
+];
+
+const certifications = [
+  { title: "Introduction to Cybersecurity", org: "Cisco Networking Academy", year: "2026" },
+  { title: "AWS Academy Cloud Foundations", org: "Amazon Web Services", year: "2025" },
+  { title: "Docker: Containers Management", org: "Alura", year: "2024" },
+  { title: "Back-End Python Career", org: "Alura", year: "2024" },
+  { title: "Git & GitHub: Collaboration", org: "Alura", year: "2023" },
+  { title: "Programming Logic — JavaScript", org: "Alura", year: "2022" },
+];
+
+const techStack = [
+  {
+    category: "Frontend",
+    color: "#3da9fc",
+    techs: [
+      { name: "React", icon: SiReact, color: "#61DAFB" },
+      { name: "Next.js", icon: SiNextdotjs, color: "#1a1a1a" },
+      { name: "Vue 3", icon: SiVuedotjs, color: "#4FC08D" },
+      { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
+      { name: "JavaScript", icon: SiJavascript, color: "#D4A017" },
+      { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4" },
+    ],
+  },
+  {
+    category: "Mobile",
+    color: "#ef4565",
+    techs: [
+      { name: "Flutter", icon: SiFlutter, color: "#02569B" },
+      { name: "Dart", icon: SiDart, color: "#0175C2" },
+    ],
+  },
+  {
+    category: "Backend",
+    color: "#00b894",
+    techs: [
+      { name: "Node.js", icon: SiNodedotjs, color: "#339933" },
+      { name: "NestJS", icon: SiNestjs, color: "#E0234E" },
+      { name: "Python", icon: SiPython, color: "#3776AB" },
+      { name: "FastAPI", icon: SiFastapi, color: "#009688" },
+      { name: "Flask", icon: SiFlask, color: "#1a1a1a" },
+      { name: "Django", icon: SiDjango, color: "#1a5c36" },
+      { name: "Prisma", icon: SiPrisma, color: "#2D3748" },
+    ],
+  },
+  {
+    category: "Database",
+    color: "#fca311",
+    techs: [
+      { name: "PostgreSQL", icon: SiPostgresql, color: "#4169E1" },
+      { name: "Firebase", icon: SiFirebase, color: "#DD2C00" },
+    ],
+  },
+  {
+    category: "Cloud & DevOps",
+    color: "#a29bfe",
+    techs: [
+      { name: "Docker", icon: SiDocker, color: "#2496ED" },
+      { name: "Google Cloud", icon: SiGooglecloud, color: "#4285F4" },
+    ],
+  },
+  {
+    category: "Tools",
+    color: "#90b4ce",
+    techs: [
+      { name: "Git", icon: SiGit, color: "#F05032" },
+      { name: "GitHub", icon: SiGithub, color: "#1a1a1a" },
+      { name: "Postman", icon: SiPostman, color: "#FF6C37" },
+      { name: "Figma", icon: SiFigma, color: "#F24E1E" },
+      { name: "Linux", icon: SiLinux, color: "#1a1a1a" },
+    ],
   },
 ];
 
 const Resume = () => {
-  const vantaRef = useRef(null);
-  const vantaEffect = useRef(null);
-
-  useEffect(() => {
-    if (!vantaRef.current) return;
-    if (vantaEffect.current) return;
-
-    vantaEffect.current = NET({
-      el: vantaRef.current,
-      THREE,
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      minHeight: 200.0,
-      minWidth: 200.0,
-      scale: 1.0,
-      scaleMobile: 1.0,
-      color: 0x3da9fc,
-      backgroundColor: 0x094067,
-      points: 10.0,
-      maxDistance: 20.0,
-      spacing: 15.0,
-    });
-
-    return () => {
-      if (vantaEffect.current) {
-        vantaEffect.current.destroy();
-        vantaEffect.current = null;
-      }
-    };
-  }, [vantaRef]);
-
   return (
-    <section className="relative min-h-screen text-[#094067] px-6 py-16 overflow-hidden">
-      {/* Vanta NET background + gradient */}
-      <div ref={vantaRef} className="absolute inset-0 -z-20" />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#094067]/80 to-[#094067]/90 -z-10 pointer-events-none" />
+    <section id="resume" className="relative min-h-screen text-[#094067] px-6 py-16 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-[#094067]/85 to-[#094067]/92 -z-10 pointer-events-none" />
 
-      <div className="relative max-w-4xl mx-auto z-10">
-        <motion.h2
+      <div className="relative max-w-5xl mx-auto z-10">
+        {/* Header */}
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-4xl font-bold text-center mb-12 text-white py-8"
+          className="text-center mb-4 py-8"
         >
-          My <span className="text-[#3da9fc]">Resume</span>
-        </motion.h2>
+          <h2 className="text-4xl font-bold text-white">
+            My <span className="text-[#3da9fc]">Resume</span>
+          </h2>
+          <p className="mt-3 text-sm text-[#d8eefe] max-w-xl mx-auto">
+            Full Stack Developer · 7th semester Software Engineering · in production since aug/2024
+          </p>
+        </motion.div>
 
-        <div className="relative pl-6 border-l-4 border-[#3da9fc] space-y-12">
+        {/* Timeline */}
+        <div className="relative pl-6 border-l-4 border-[#3da9fc] space-y-10 mb-14">
           {resumeData.map((item, index) => (
             <motion.div
               key={index}
@@ -119,41 +141,104 @@ const Resume = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              whileHover={{ scale: 1.03, rotate: 0.5 }}
-              whileTap={{ scale: 0.98 }}
-              className="relative cursor-pointer group"
+              whileHover={{ scale: 1.02 }}
+              className="relative cursor-default group"
             >
-              {/* animated timeline dot */}
               <motion.div
                 animate={{ scale: [1, 1.3, 1] }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                 className="absolute -left-5 top-1.5 w-3 h-3 bg-[#3da9fc] rounded-full shadow-md"
               />
-
-              <div className="ml-4 bg-white/95 border-l-4 border-[#3da9fc] pl-6 py-4 rounded shadow-md group-hover:shadow-lg transition-all duration-300">
-                <h4 className="text-lg font-bold flex items-center gap-2 group-hover:text-[#3da9fc]">
-                  {item.type === "experience" ? (
-                    <FaBriefcase />
-                  ) : (
-                    <FaGraduationCap />
-                  )}
+              <div className="ml-4 bg-white/95 border-l-4 border-[#3da9fc] pl-6 py-4 pr-4 rounded shadow-md group-hover:shadow-lg transition-all duration-300">
+                <h4 className="text-lg font-bold flex items-center gap-2 group-hover:text-[#3da9fc] transition">
+                  {item.type === "experience" ? <FaBriefcase className="text-[#3da9fc]" /> : <FaGraduationCap className="text-[#3da9fc]" />}
                   {item.title}
                 </h4>
-                <p className="text-sm text-[#5f6c7b]">{item.company}</p>
-                <p className="text-sm italic text-[#5f6c7b]">
-                  {item.period}
-                </p>
-                <p className="text-sm mt-2 text-[#5f6c7b]">
-                  {item.description}
-                </p>
+                <p className="text-sm font-semibold text-[#3da9fc]">{item.company}</p>
+                <p className="text-xs italic text-[#90b4ce] mb-2">{item.period}</p>
+                {item.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {item.tags.map((tag) => (
+                      <span key={tag} className="px-2 py-0.5 rounded-full bg-[#d8eefe] text-[#094067] text-xs font-medium">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <p className="text-sm text-[#5f6c7b]">{item.description}</p>
               </div>
             </motion.div>
           ))}
         </div>
+
+        {/* Certifications */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-14"
+        >
+          <h3 className="text-xl font-bold text-white mb-5 flex items-center gap-2">
+            <FaCertificate className="text-[#3da9fc]" /> Certifications
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {certifications.map((cert, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                className="bg-white/95 rounded-xl p-4 shadow-md border border-[#90b4ce33] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+              >
+                <p className="text-sm font-semibold text-[#094067]">{cert.title}</p>
+                <p className="text-xs text-[#3da9fc] mt-0.5">{cert.org}</p>
+                <p className="text-xs text-[#90b4ce] mt-0.5">{cert.year}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Tech Stack */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <h3 className="text-xl font-bold text-white mb-5">Tech Stack</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            {techStack.map((group, gi) => (
+              <motion.div
+                key={group.category}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: gi * 0.08 }}
+                className="bg-white/95 rounded-xl p-5 shadow-md border border-[#90b4ce33]"
+              >
+                <p
+                  className="text-xs font-bold uppercase tracking-widest mb-3"
+                  style={{ color: group.color }}
+                >
+                  {group.category}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {group.techs.map(({ name, icon: Icon, color }) => (
+                    <span
+                      key={name}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#f0f7ff] border border-[#90b4ce33] text-sm text-[#094067] hover:scale-105 transition-transform duration-150 cursor-default"
+                    >
+                      <Icon style={{ color, fontSize: "1rem", flexShrink: 0 }} />
+                      {name}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );
