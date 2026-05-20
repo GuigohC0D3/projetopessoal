@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* Scrollbar customizada */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #021524;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3da9fc, #ef4565);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #59b8ff, #ff5b78);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3da9fc #021524;
+}
+
+html {
+  scroll-behavior: smooth;
+}
