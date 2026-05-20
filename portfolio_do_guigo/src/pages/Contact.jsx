@@ -132,7 +132,6 @@ const Contact = () => {
           user_email: data.get("user_email"),
           subject:    data.get("subject"),
           message:    data.get("message"),
-          reply_to:   data.get("user_email"),
         },
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       )
