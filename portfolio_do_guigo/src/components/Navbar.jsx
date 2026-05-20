@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { scrollTo } from "../utils/scrollTo";
 
 const navItems = [
   { name: "Home", id: "home" },
@@ -8,14 +9,6 @@ const navItems = [
   { name: "Work", id: "work" },
   { name: "Contact", id: "contact" },
 ];
-
-const scrollTo = (id) => {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const offset = 64;
-  const top = el.getBoundingClientRect().top + window.scrollY - offset;
-  window.scrollTo({ top, behavior: "smooth" });
-};
 
 const Navbar = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);

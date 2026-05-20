@@ -1,12 +1,6 @@
 import React from "react";
 import { FaGithub, FaLinkedin, FaInstagram } from "react-icons/fa";
-
-const scrollTo = (id) => {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const top = el.getBoundingClientRect().top + window.scrollY - 64;
-  window.scrollTo({ top, behavior: "smooth" });
-};
+import { scrollTo } from "../utils/scrollTo";
 
 const Footer = () => {
   return (
