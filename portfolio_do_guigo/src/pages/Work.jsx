@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   FaExternalLinkAlt,
@@ -6,130 +6,115 @@ import {
   FaLaptopCode,
   FaMobileAlt,
   FaServer,
+  FaBrain,
 } from "react-icons/fa";
-import * as THREE from "three";
-// @ts-ignore
-import NET from "vanta/src/vanta.net";
 
 const categories = [
   { id: "all", label: "All" },
   { id: "web", label: "Web Apps" },
   { id: "mobile", label: "Mobile" },
-  { id: "backend", label: "APIs & Backends" },
+  { id: "backend", label: "Backend" },
+  { id: "ai", label: "AI / Research" },
 ];
 
 const projects = [
   {
-    title: "Ordering & Tab Management System",
+    title: "Peticionador",
     role: "Full Stack Developer",
     type: "Web App",
     category: "web",
     featured: true,
-    stack: ["React", "Flask", "PostgreSQL", "Docker"],
+    impact: "R$40k project · ~R$3k/mo savings · 2h saved per petition",
+    stack: ["React", "Vite", "Flask", "PostgreSQL", "Firestore", "Docker", "Google Cloud Run"],
     description:
-      "Ordering system for ARJOB Club, allowing table selection, order registration, tab management and closing with full history for audits.",
-    highlight: "From manual notes to a structured digital system with history and error tracking.",
+      "Complete system for law firms with automatic generation of legal petitions (.docx), client and legal thesis management. Interface built with Tailwind CSS, Radix UI, Framer Motion and Recharts. Containerized with Docker, deployed on Google Cloud Run with CI/CD via Cloud Build.",
+    highlight: "From manual drafting to automated petitions in seconds — real ROI delivered.",
     demoUrl: "",
     githubUrl: "",
   },
   {
-    title: "BibigoAirplane – Flight Booking App",
+    title: "BEES B2B — Ambev",
+    role: "Backend Developer (Intern)",
+    type: "Enterprise API",
+    category: "backend",
+    featured: true,
+    impact: "Production · National scale · Ambev platform",
+    stack: ["Python 3.12", "Django", "Django REST Framework", "APScheduler", "Pytest"],
+    description:
+      "Modules for the B2B BEES platform used by Ambev distributors nationwide. Delivered account management, dynamic delivery windows and KPI flexibility features in a production environment, following professional code standards alongside a third-party team.",
+    highlight: "Enterprise production code for one of Brazil's largest beverage companies.",
+    demoUrl: "",
+    githubUrl: "",
+  },
+  {
+    title: "App Barbearia",
     role: "Mobile & Backend Developer",
     type: "Mobile App",
     category: "mobile",
-    stack: ["Flutter", "Firebase", "Amadeus API"],
+    featured: false,
+    impact: "In active real use",
+    stack: ["Flutter", "Dart", "NestJS", "Prisma", "PostgreSQL"],
     description:
-      "Mobile app for searching flights, viewing prices and saving reservations, inspired by real airline apps and integrated with Amadeus APIs.",
-    highlight: "End-to-end flow: search, seat selection, payment and boarding pass.",
+      "Mobile app in real-world use for barbershop scheduling and management, with admin panel and a secure REST API built with NestJS and Prisma ORM.",
+    highlight: "End-to-end mobile: scheduling, admin panel, secure REST API — live in production.",
+    demoUrl: "",
+    githubUrl: "https://github.com/GuigohC0D3/app_barbearia",
+  },
+  {
+    title: "Círculo de Fogo — TCC",
+    role: "AI / Research Developer",
+    type: "AI Research",
+    category: "ai",
+    featured: false,
+    impact: "Academic · AI-driven research",
+    stack: ["Python", "Machine Learning", "Climatic Data APIs", "AI"],
+    description:
+      "Predictive AI system to estimate forest fire spread velocity, integrating climatic, environmental and land-cover data to outperform traditional models and optimize emergency responses.",
+    highlight: "AI-powered fire behavior prediction surpassing traditional simulation models.",
     demoUrl: "",
     githubUrl: "",
   },
   {
-    title: "Internship Journal Platform",
+    title: "Soil Health Assistance System",
     role: "Full Stack Developer",
     type: "Web App",
     category: "web",
-    stack: ["Next.js", "Django", "JWT Auth"],
+    featured: false,
+    impact: "Open-source MVP",
+    stack: ["Vue 3", "FastAPI", "PostgreSQL", "Docker Compose"],
     description:
-      "Platform for interns and managers to register daily logs, approvals and reports with digital signatures and PDF export.",
-    highlight: "Multi-role access with secure authentication and signature workflow.",
+      "Full-stack MVP to automate soil management recommendations based on lab analyses. JWT authentication, Swagger-documented API and Docker Compose infrastructure.",
+    highlight: "From soil data to actionable farming insights with secure full-stack architecture.",
     demoUrl: "",
-    githubUrl: "",
+    githubUrl: "https://github.com/GuigohC0D3/soil-health-assistance-system",
   },
   {
-    title: "Lost & Found – ICEV",
-    role: "Full Stack Developer",
-    type: "Web & Mobile",
-    category: "web",
-    stack: ["Flutter", "Firebase", "Cloud Storage"],
-    description:
-      "Lost and found system for an educational institution, registering items, owners and matches between them.",
-    highlight: "Reduces friction between students and administration when dealing with lost items.",
-    demoUrl: "",
-    githubUrl: "",
-  },
-  {
-    title: "Flights API Integration",
-    role: "Backend Developer",
-    type: "API / Backend",
-    category: "backend",
-    stack: ["Node.js", "TypeScript", "Amadeus API"],
-    description:
-      "Backend integration service with Amadeus Flight Offers to power search and pricing features for client apps.",
-    highlight: "Clean architecture with separation between services, mappers and external providers.",
-    demoUrl: "",
-    githubUrl: "",
-  },
-  {
-    title: "TV Content Management for Company",
+    title: "Personal Portfolio",
     role: "Frontend Developer",
-    type: "Internal Tool",
+    type: "Web App",
     category: "web",
-    stack: ["React", "TypeScript", "WebSockets"],
+    featured: false,
+    impact: "Live & deployed",
+    stack: ["React", "Vite", "Tailwind CSS", "Framer Motion", "Three.js"],
     description:
-      "Dashboard to manage and schedule content for multiple TVs inside the company, with real-time updates.",
-    highlight: "Centralized control of multiple screens with live sync.",
-    demoUrl: "",
+      "Professional portfolio showcasing projects, tech stack and contact channels. Features animated 3D Vanta/Three.js backgrounds, smooth transitions and live GitHub API stats.",
+    highlight: "This very site — built with React, animated with Framer Motion and Three.js.",
+    demoUrl: "https://guilhermeancheschiwerneckpereiraportfoli-g05v.onrender.com",
     githubUrl: "",
   },
 ];
 
+const categoryIcon = {
+  web: <FaLaptopCode />,
+  mobile: <FaMobileAlt />,
+  backend: <FaServer />,
+  ai: <FaBrain />,
+};
+
 const Work = () => {
   const [activeCategory, setActiveCategory] = useState("all");
 
-  const vantaRef = useRef(null);
-  const vantaEffect = useRef(null);
-
-  useEffect(() => {
-    if (!vantaRef.current) return;
-    if (vantaEffect.current) return;
-
-    vantaEffect.current = NET({
-      el: vantaRef.current,
-      THREE,
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      minHeight: 200.0,
-      minWidth: 200.0,
-      scale: 1.0,
-      scaleMobile: 1.0,
-      color: 0x3da9fc,
-      backgroundColor: 0x094067,
-      points: 10.0,
-      maxDistance: 20.0,
-      spacing: 15.0,
-    });
-
-    return () => {
-      if (vantaEffect.current) {
-        vantaEffect.current.destroy();
-        vantaEffect.current = null;
-      }
-    };
-  }, [vantaRef]);
-
-  const filteredProjects =
+  const filtered =
     activeCategory === "all"
       ? projects
       : projects.filter((p) => p.category === activeCategory);
@@ -139,9 +124,7 @@ const Work = () => {
       id="work"
       className="relative min-h-screen text-[#094067] px-6 py-16 overflow-hidden"
     >
-      {/* Vanta NET background + gradient */}
-      <div ref={vantaRef} className="absolute inset-0 -z-20" />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#094067]/80 to-[#094067]/90 -z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#094067]/85 to-[#094067]/92 -z-10 pointer-events-none" />
 
       <div className="relative max-w-6xl mx-auto z-10">
         {/* Header */}
@@ -155,8 +138,7 @@ const Work = () => {
             My <span className="text-[#3da9fc]">Work</span>
           </h2>
           <p className="mt-3 text-sm sm:text-base text-[#d8eefe] max-w-2xl mx-auto">
-            A selection of real projects and experiments where I combine modern
-            web development, clean interfaces and solid engineering practices.
+            Real projects — from enterprise production APIs to mobile apps in active use.
           </p>
         </motion.div>
 
@@ -182,62 +164,66 @@ const Work = () => {
           ))}
         </motion.div>
 
-        {/* Grid de projetos */}
+        {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => (
+          {filtered.map((project, index) => (
             <motion.article
               key={project.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              transition={{ duration: 0.5, delay: index * 0.08 }}
               className={`bg-white/95 rounded-xl shadow-md border border-[#90b4ce33] p-6 flex flex-col justify-between hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ${
-                project.featured ? "md:col-span-2 xl:col-span-2" : ""
+                project.featured ? "md:col-span-2 xl:col-span-1" : ""
               }`}
             >
-              {/* Topo: tipo + ícone */}
-              <div className="flex items-center justify-between gap-3 mb-3">
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#3da9fc]">
-                  {project.type}
-                </span>
-                <div className="text-[#3da9fc]">
-                  {project.category === "web" && <FaLaptopCode />}
-                  {project.category === "mobile" && <FaMobileAlt />}
-                  {project.category === "backend" && <FaServer />}
-                </div>
-              </div>
-
-              {/* Conteúdo principal */}
+              {/* Top row */}
               <div>
-                <h3 className="text-lg sm:text-xl font-bold text-[#094067] mb-1">
-                  {project.title}
-                </h3>
-                <p className="text-xs font-semibold text-[#5f6c7b] mb-1">
-                  {project.role}
-                </p>
-                <p className="text-xs text-[#90b4ce] mb-3">
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-xs font-semibold uppercase tracking-widest text-[#3da9fc]">
+                      {project.type}
+                    </span>
+                    {project.featured && (
+                      <span className="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#ef4565] text-white w-fit">
+                        Featured
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-[#3da9fc] text-lg mt-0.5">
+                    {categoryIcon[project.category]}
+                  </div>
+                </div>
+
+                <h3 className="text-lg font-bold text-[#094067] mb-0.5">{project.title}</h3>
+                <p className="text-xs font-semibold text-[#5f6c7b] mb-2">{project.role}</p>
+
+                {/* Impact badge */}
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#d8eefe] text-[#094067] text-xs font-semibold mb-3">
+                  {project.impact}
+                </div>
+
+                <p className="text-xs text-[#3da9fc] font-medium mb-2 leading-snug">
                   {project.highlight}
                 </p>
-                <p className="text-sm text-[#5f6c7b] mb-4">
-                  {project.description}
-                </p>
+                <p className="text-sm text-[#5f6c7b] mb-4">{project.description}</p>
               </div>
 
               {/* Stack + links */}
-              <div className="mt-4 flex flex-col gap-3">
-                <div className="flex flex-wrap gap-2">
+              <div className="mt-auto flex flex-col gap-3">
+                <div className="flex flex-wrap gap-1.5">
                   {project.stack.map((tech) => (
                     <span
                       key={tech}
-                      className="px-2 py-1 rounded-full bg-[#d8eefe] text-[#094067] text-xs"
+                      className="px-2 py-0.5 rounded-full bg-[#f0f7ff] text-[#094067] text-xs border border-[#90b4ce33]"
                     >
                       {tech}
                     </span>
                   ))}
                 </div>
 
-                <div className="flex items-center justify-between mt-2">
-                  <div className="flex gap-3 text-sm">
+                {(project.githubUrl || project.demoUrl) && (
+                  <div className="flex gap-3 text-sm pt-1">
                     {project.githubUrl && (
                       <a
                         href={project.githubUrl}
@@ -261,13 +247,7 @@ const Work = () => {
                       </a>
                     )}
                   </div>
-
-                  {project.featured && (
-                    <span className="text-[10px] uppercase tracking-widest px-2 py-1 rounded-full bg-[#ef4565] text-white">
-                      Featured
-                    </span>
-                  )}
-                </div>
+                )}
               </div>
             </motion.article>
           ))}
