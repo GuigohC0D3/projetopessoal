@@ -32,6 +32,7 @@ Personal portfolio built as a single-page application with animated 3D backgroun
 | 3D / Background | Three.js + Vanta NET |
 | Tilt Effect | react-parallax-tilt |
 | Email | @emailjs/browser |
+| Containerization | Docker + Nginx |
 | Linting | ESLint 9 (flat config) |
 
 ---
@@ -59,9 +60,14 @@ portfolio_do_guigo/
 │   │   ├── Resume.jsx              # Timeline + Certifications + Tech Stack
 │   │   ├── Services.jsx            # Service cards with tilt effect
 │   │   └── Work.jsx                # Filterable project grid
+│   ├── utils/
+│   │   └── scrollTo.js             # Custom RAF scroll with cubic easing
 │   ├── App.jsx                     # Vanta global instance + section layout
 │   ├── index.css                   # Custom scrollbar + global styles
 │   └── main.jsx
+├── Dockerfile                      # Multi-stage build (Node → Nginx)
+├── nginx.conf                      # SPA routing + gzip + asset caching
+├── .dockerignore
 ├── vite.config.js                  # Manual chunks (vendor / framer / three)
 └── package.json
 ```
@@ -126,6 +132,47 @@ npm run preview
 
 ---
 
+## Docker
+
+### Build the image
+
+The EmailJS keys must be passed as build args because Vite bakes environment
+variables into the bundle at build time — they are **not** read at runtime.
+
+```bash
+docker build \
+  --build-arg VITE_EMAILJS_SERVICE_ID=your_service_id \
+  --build-arg VITE_EMAILJS_TEMPLATE_ID=your_template_id \
+  --build-arg VITE_EMAILJS_PUBLIC_KEY=your_public_key \
+  -t portfolio .
+```
+
+### Run the container
+
+```bash
+docker run -p 8080:80 portfolio
+```
+
+Open [http://localhost:8080](http://localhost:8080).
+
+### How it works
+
+The Dockerfile uses a **two-stage build**:
+
+| Stage | Base image | What it does |
+|-------|-----------|-------------|
+| `builder` | `node:20-alpine` | Installs dependencies and runs `vite build` |
+| `runner` | `nginx:1.27-alpine` | Copies `dist/` and serves it with Nginx |
+
+The final image contains only Nginx + the static bundle — no Node.js, no source code.
+
+`nginx.conf` configures:
+- **SPA fallback** — `try_files $uri /index.html` for client-side routing
+- **Long-term caching** — `Cache-Control: public, immutable` for hashed assets
+- **Gzip compression** — JS, CSS and JSON are compressed automatically
+
+---
+
 ## Architecture Notes
 
 ### Single Global Vanta Background
@@ -156,7 +203,7 @@ Both are unauthenticated public endpoints. Displays a skeleton pulse while loadi
 
 ### Scroll Navigation
 
-`Navbar.jsx` uses `IntersectionObserver` with `threshold: 0.25` and `rootMargin: "-64px 0px -40% 0px"` to detect which section is active. Clicking a nav item calls a `scrollTo(id)` helper that offsets by 64px (navbar height) using `window.scrollTo({ behavior: "smooth" })`.
+`Navbar.jsx` uses `IntersectionObserver` with `threshold: 0.25` and `rootMargin: "-64px 0px -40% 0px"` to detect which section is active. Clicking a nav item calls `scrollTo(id)` from `src/utils/scrollTo.js`, which drives a `requestAnimationFrame` loop with **ease-in-out cubic** easing over 900ms and a 64px offset for the fixed navbar. This replaces `behavior: "smooth"` for consistent cross-browser animation control.
 
 ---
 
@@ -168,6 +215,14 @@ Both are unauthenticated public endpoints. Displays a skeleton pulse while loadi
 | `npm run build` | Production build to `dist/` |
 | `npm run preview` | Preview production build locally |
 | `npm run lint` | Run ESLint |
+
+## Docker Commands
+
+| Command | Description |
+|---------|-------------|
+| `docker build -t portfolio .` | Build image (add `--build-arg` for EmailJS keys) |
+| `docker run -p 8080:80 portfolio` | Run container on port 8080 |
+| `docker build --no-cache -t portfolio .` | Force full rebuild |
 
 ---
 
