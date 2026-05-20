@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Tilt from "react-parallax-tilt";
 import { motion as Motion } from "framer-motion";
 import {
@@ -11,43 +11,12 @@ import {
   FaLayerGroup,
   FaGitAlt,
 } from "react-icons/fa";
-import * as THREE from "three";
-// @ts-ignore
-import NET from "vanta/src/vanta.net"; // Aqui trocamos de BIRDS para NET
-import profileImg from "../assets/Guigo.png";
+import profileImg from "../assets/foto_nova.jpg";
 import AnimatedCounter from "../components/AnimatedCounter";
+import { useGitHubStats } from "../hooks/useGitHubStats";
 
 const Home = () => {
-  const vantaRef = useRef(null);
-  const vantaEffect = useRef(null);
-
-  useEffect(() => {
-    if (!vantaEffect.current && vantaRef.current) {
-      vantaEffect.current = NET({
-        el: vantaRef.current,
-        THREE,
-        mouseControls: true,
-        touchControls: true,
-        gyroControls: false,
-        minHeight: 200.0,
-        minWidth: 200.0,
-        scale: 1.0,
-        scaleMobile: 1.0,
-        color: 0x3da9fc,
-        backgroundColor: 0x094067,
-        points: 10.0,
-        maxDistance: 20.0,
-        spacing: 15.0,
-      });
-    }
-
-    return () => {
-      if (vantaEffect.current) {
-        vantaEffect.current.destroy();
-        vantaEffect.current = null;
-      }
-    };
-  }, []);
+  const { repos, commits, loading } = useGitHubStats();
 
   const stats = [
     {
@@ -57,10 +26,10 @@ const Home = () => {
       tooltip: "Time since I started working professionally as a developer",
     },
     {
-      label: "Completed Projects",
-      end: 10,
+      label: "Public Repositories",
+      end: repos ?? 0,
       icon: <FaProjectDiagram />,
-      tooltip: "Projects successfully completed",
+      tooltip: "Public repositories on GitHub",
     },
     {
       label: "Technologies Mastered",
@@ -70,16 +39,17 @@ const Home = () => {
     },
     {
       label: "Code Commits",
-      end: 683,
+      end: commits ?? 0,
       icon: <FaGitAlt />,
-      tooltip: "Public commits made across my Git repositories",
+      tooltip: "Total public commits on GitHub",
     },
   ];
 
   return (
-    <section className="relative min-h-screen text-[#094067] flex flex-col justify-center items-center px-6 py-12 overflow-hidden">
-      {/* 🔹 Fundo animado NET */}
-      <div ref={vantaRef} className="absolute inset-0 -z-20" />
+    <section
+      id="home"
+      className="relative min-h-screen text-[#094067] flex flex-col justify-center items-center px-6 py-12 overflow-hidden"
+    >
       <div className="absolute inset-0 bg-gradient-to-b from-[#094067]/80 to-[#094067]/90 -z-10 pointer-events-none" />
 
       <div className="relative w-full max-w-6xl grid md:grid-cols-2 items-center gap-12 z-10">
@@ -92,7 +62,7 @@ const Home = () => {
           <p className="text-sm uppercase tracking-widest text-[#ffffff]">
             Software Developer
           </p>
-          <h1 className="text-4xl  text-[#137dce] sm:text-5xl font-bold mt-2">
+          <h1 className="text-4xl text-[#137dce] sm:text-5xl font-bold mt-2">
             Hello I'm{" "}
             <span className="text-[#3da9fc]">
               Guilherme Ancheschi Werneck Pereira
@@ -105,32 +75,20 @@ const Home = () => {
 
           <div className="flex justify-center md:justify-start flex-wrap items-center gap-4 mt-6">
             <a
-              href="/Guilherme Ancheschi Werneck Pereira - Currículo (4) (2) (1).pdf"
+              href="/Curriculo_Guilherme_Ancheschi_Werneck_Pereira (4).pdf"
               download
               className="flex items-center gap-2 px-6 py-2 border border-[#3da9fc] text-[#3da9fc] rounded hover:bg-[#3da9fc] hover:text-white transition"
             >
               <FaDownload /> Download CV
             </a>
             <div className="flex gap-4 items-center">
-              <a
-                href="https://github.com/GuigohC0D3"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="https://github.com/GuigohC0D3" target="_blank" rel="noreferrer">
                 <FaGithub className="text-xl text-[#3da9fc] hover:text-[#359dec] transition" />
               </a>
-              <a
-                href="https://www.linkedin.com/in/guilherme-ancheschi-werneck-pereira/"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="https://www.linkedin.com/in/guilherme-ancheschi-werneck-pereira/" target="_blank" rel="noreferrer">
                 <FaLinkedin className="text-xl text-[#3da9fc] hover:text-[#359dec] transition" />
               </a>
-              <a
-                href="https://www.instagram.com/guigohwerneck?igsh=MWZ5Y2U3bXgwZzU5bw=="
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="https://www.instagram.com/guigohwerneck?igsh=MWZ5Y2U3bXgwZzU5bw==" target="_blank" rel="noreferrer">
                 <FaInstagram className="text-xl text-[#3da9fc] hover:text-[#359dec] transition" />
               </a>
             </div>
@@ -147,19 +105,19 @@ const Home = () => {
             <Motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
-              className="absolute w-[110%] h-[110%] rounded-full border-2 border-dashed border-transparent opacity-30 pointer-events-none"
+              className="absolute w-[110%] h-[110%] rounded-full border-2 border-dashed border-[#3da9fc] opacity-30 pointer-events-none"
             />
             <Tilt
               tiltMaxAngleX={20}
               tiltMaxAngleY={20}
               scale={1.05}
               transitionSpeed={2500}
-              className="w-full h-full"
+              className="w-full h-full rounded-full overflow-hidden shadow-xl"
             >
               <img
                 src={profileImg}
                 alt="Perfil"
-                className="w-full h-full object-cover object-top rounded-full shadow-xl"
+                className="w-full h-full object-cover object-top scale-[1.17]"
               />
             </Tilt>
           </div>
@@ -181,14 +139,16 @@ const Home = () => {
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.3, delay: i * 0.2 }}
           >
-            <div className="text-3xl mb-2 text-[#3da9fc] mx-auto">
-              {item.icon}
-            </div>
-            <AnimatedCounter end={item.end} />
+            <div className="text-3xl mb-2 text-[#3da9fc] mx-auto">{item.icon}</div>
+            {loading && (i === 1 || i === 3) ? (
+              <div className="h-9 w-16 mx-auto rounded bg-[#d8eefe] animate-pulse mb-1" />
+            ) : (
+              <AnimatedCounter end={item.end} />
+            )}
             <p className="text-sm text-[#5f6c7b] mt-1 group-hover:text-[#3da9fc] transition">
               {item.label}
             </p>
-            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-[#3da9fc] text-white text-xs rounded px-3 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none">
+            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-[#3da9fc] text-white text-xs rounded px-3 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap">
               {item.tooltip}
             </div>
           </Motion.div>

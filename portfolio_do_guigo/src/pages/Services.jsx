@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Tilt from "react-parallax-tilt";
 import { motion as Motion } from "framer-motion";
 import {
@@ -9,9 +9,6 @@ import {
   FaShieldAlt,
   FaLock,
 } from "react-icons/fa";
-import * as THREE from "three";
-// @ts-ignore
-import NET from "vanta/src/vanta.net";
 
 const services = [
   {
@@ -59,48 +56,18 @@ const services = [
 ];
 
 const Services = () => {
-  const vantaRef = useRef(null);
-  const vantaEffect = useRef(null);
-
-  useEffect(() => {
-    if (!vantaRef.current) return;
-    if (vantaEffect.current) return;
-
-    vantaEffect.current = NET({
-      el: vantaRef.current,
-      THREE,
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      minHeight: 200.0,
-      minWidth: 200.0,
-      scale: 1.0,
-      scaleMobile: 1.0,
-      color: 0x3da9fc,
-      backgroundColor: 0x094067,
-      points: 10.0,
-      maxDistance: 20.0,
-      spacing: 15.0,
-    });
-
-    return () => {
-      if (vantaEffect.current) {
-        vantaEffect.current.destroy();
-        vantaEffect.current = null;
-      }
-    };
-  }, [vantaRef]); // eslint não reclama e o ref não muda de identidade
-
   return (
-    <section className="relative min-h-screen text-[#094067] px-6 py-16 flex flex-col items-center overflow-hidden">
-      {/* 🔹 Fundo Vanta NET */}
-      <div ref={vantaRef} className="absolute inset-0 -z-20" />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#094067]/80 to-[#094067]/90 -z-10 pointer-events-none" />
+    <section
+      id="services"
+      className="relative min-h-screen text-[#094067] px-6 py-16 flex flex-col items-center overflow-hidden"
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-[#094067]/85 to-[#094067]/92 -z-10 pointer-events-none" />
 
       <div className="relative w-full max-w-6xl z-10">
         <Motion.h2
           initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="text-4xl font-bold text-center mb-12 text-white py-8"
         >
@@ -113,7 +80,7 @@ const Services = () => {
               key={service.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.2, duration: 0.6 }}
+              transition={{ delay: index * 0.15, duration: 0.6 }}
               viewport={{ once: true }}
             >
               <Tilt
@@ -137,9 +104,7 @@ const Services = () => {
                   <h3 className="text-xl font-semibold text-[#094067]">
                     {service.title}
                   </h3>
-                  <p className="text-[#5f6c7b] text-sm">
-                    {service.description}
-                  </p>
+                  <p className="text-[#5f6c7b] text-sm">{service.description}</p>
                 </div>
               </Tilt>
             </Motion.div>

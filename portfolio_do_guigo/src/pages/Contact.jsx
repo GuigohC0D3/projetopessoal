@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   FaEnvelope,
@@ -7,44 +7,11 @@ import {
   FaLocationArrow,
   FaPaperPlane,
 } from "react-icons/fa";
-import * as THREE from "three";
 import emailjs from "@emailjs/browser";
-// @ts-ignore
-import NET from "vanta/src/vanta.net";
 
 const Contact = () => {
-  const vantaRef = useRef(null);
-  const vantaEffect = useRef(null);
   const formRef = useRef(null);
   const [isSending, setIsSending] = useState(false);
-
-  useEffect(() => {
-    if (!vantaRef.current || vantaEffect.current) return;
-
-    vantaEffect.current = NET({
-      el: vantaRef.current,
-      THREE,
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      minHeight: 200.0,
-      minWidth: 200.0,
-      scale: 1.0,
-      scaleMobile: 1.0,
-      color: 0x3da9fc,
-      backgroundColor: 0x094067,
-      points: 10.0,
-      maxDistance: 20.0,
-      spacing: 15.0,
-    });
-
-    return () => {
-      if (vantaEffect.current) {
-        vantaEffect.current.destroy();
-        vantaEffect.current = null;
-      }
-    };
-  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -79,9 +46,7 @@ const Contact = () => {
       id="contact"
       className="relative min-h-screen text-[#094067] px-6 py-16 overflow-hidden"
     >
-      {/* Background */}
-      <div ref={vantaRef} className="absolute inset-0 -z-20" />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#094067]/80 to-[#094067]/90 -z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#094067]/85 to-[#094067]/92 -z-10 pointer-events-none" />
 
       <div className="relative max-w-5xl mx-auto z-10">
         <motion.div
@@ -128,7 +93,7 @@ const Contact = () => {
                     href="mailto:guilhermewerneckpereira11@hotmail.com"
                     className="hover:text-[#3da9fc] transition"
                   >
-                    guigohwerneckpereira11@hotmail.com
+                    guilhermewerneckpereira11@hotmail.com
                   </a>
                 </div>
 
