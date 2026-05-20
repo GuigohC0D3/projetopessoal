@@ -1,11 +1,14 @@
 import React, { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FaEnvelope,
   FaLinkedin,
   FaGithub,
   FaLocationArrow,
   FaPaperPlane,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaTimes,
 } from "react-icons/fa";
 import emailjs from "@emailjs/browser";
 
@@ -31,9 +34,84 @@ const contactItems = [
   },
 ];
 
+const Modal = ({ type, onClose }) => {
+  const isSuccess = type === "success";
+
+  return (
+    <AnimatePresence>
+      {type && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            key="backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[300]"
+          />
+
+          {/* Modal card */}
+          <motion.div
+            key="modal"
+            initial={{ opacity: 0, scale: 0.85, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, y: 20 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className="fixed inset-0 flex items-center justify-center z-[301] px-4"
+            aria-modal="true"
+            role="dialog"
+          >
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-8 relative text-center">
+              {/* Close button */}
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 text-[#90b4ce] hover:text-[#094067] transition"
+                aria-label="Close"
+              >
+                <FaTimes size={18} />
+              </button>
+
+              {/* Icon */}
+              <div className={`flex justify-center mb-4 text-5xl ${isSuccess ? "text-[#3da9fc]" : "text-[#ef4565]"}`}>
+                {isSuccess ? <FaCheckCircle /> : <FaTimesCircle />}
+              </div>
+
+              {/* Title */}
+              <h3 className="text-xl font-bold text-[#094067] mb-2">
+                {isSuccess ? "Message sent!" : "Something went wrong"}
+              </h3>
+
+              {/* Body */}
+              <p className="text-sm text-[#5f6c7b] mb-6">
+                {isSuccess
+                  ? "Thanks for reaching out! I'll get back to you as soon as possible."
+                  : "Your message could not be sent. Please try again or contact me directly by email."}
+              </p>
+
+              {/* Action button */}
+              <button
+                onClick={onClose}
+                className={`w-full py-2.5 rounded-full text-white text-sm font-semibold transition ${
+                  isSuccess
+                    ? "bg-[#3da9fc] hover:bg-[#359dec]"
+                    : "bg-[#ef4565] hover:bg-[#ff5b78]"
+                }`}
+              >
+                {isSuccess ? "Got it!" : "Close"}
+              </button>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
 const Contact = () => {
   const formRef = useRef(null);
   const [isSending, setIsSending] = useState(false);
+  const [modal, setModal] = useState(null); // 'success' | 'error' | null
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,25 +119,33 @@ const Contact = () => {
 
     setIsSending(true);
 
+    const data = new FormData(formRef.current);
+
+    // Using emailjs.send with explicit params so reply_to is always set,
+    // making it clear in the inbox which email address sent the message.
     emailjs
-      .sendForm(
+      .send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        formRef.current,
+        {
+          user_name:  data.get("user_name"),
+          user_email: data.get("user_email"),
+          subject:    data.get("subject"),
+          message:    data.get("message"),
+          reply_to:   data.get("user_email"),
+        },
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       )
-      .then(
-        () => {
-          setIsSending(false);
-          alert("Thanks for reaching out! I'll get back to you soon.");
-          e.target.reset();
-        },
-        (error) => {
-          console.error("EMAILJS ERROR:", error);
-          setIsSending(false);
-          alert("Something went wrong. Please try again.");
-        }
-      );
+      .then(() => {
+        setIsSending(false);
+        setModal("success");
+        formRef.current.reset();
+      })
+      .catch((error) => {
+        console.error("EMAILJS ERROR:", error);
+        setIsSending(false);
+        setModal("error");
+      });
   };
 
   return (
@@ -68,6 +154,8 @@ const Contact = () => {
       className="relative min-h-screen text-[#094067] px-4 sm:px-6 py-16 overflow-hidden"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-[#094067]/85 to-[#094067]/92 -z-10 pointer-events-none" />
+
+      <Modal type={modal} onClose={() => setModal(null)} />
 
       <div className="relative w-full max-w-5xl mx-auto z-10">
 
@@ -100,7 +188,6 @@ const Contact = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="flex flex-col gap-4"
           >
-            {/* Info card */}
             <div className="bg-white/95 rounded-xl shadow-md border border-[#90b4ce33] p-4 sm:p-6">
               <h3 className="text-lg sm:text-xl font-bold text-[#094067] mb-2">
                 Contact Information
@@ -128,7 +215,6 @@ const Contact = () => {
                   </li>
                 ))}
 
-                {/* Location — not a link */}
                 <li className="flex items-center gap-3 min-w-0">
                   <span className="shrink-0 p-2 rounded-full bg-[#d8eefe] text-[#3da9fc]">
                     <FaLocationArrow />
@@ -140,7 +226,6 @@ const Contact = () => {
               </ul>
             </div>
 
-            {/* Hint card */}
             <div className="bg-white/10 border border-[#90b4ce55] rounded-xl p-4 text-xs text-[#d8eefe] leading-relaxed">
               Prefer async communication? Send me a detailed message with project
               requirements, deadlines and budget estimates — I&apos;ll reply with
@@ -161,14 +246,9 @@ const Contact = () => {
             </h3>
 
             <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-4">
-
-              {/* Name + Email side by side on sm+ */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-xs font-semibold text-[#5f6c7b] uppercase tracking-widest mb-1"
-                  >
+                  <label htmlFor="name" className="block text-xs font-semibold text-[#5f6c7b] uppercase tracking-widest mb-1">
                     Name
                   </label>
                   <input
@@ -182,10 +262,7 @@ const Contact = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-xs font-semibold text-[#5f6c7b] uppercase tracking-widest mb-1"
-                  >
+                  <label htmlFor="email" className="block text-xs font-semibold text-[#5f6c7b] uppercase tracking-widest mb-1">
                     Email
                   </label>
                   <input
@@ -200,10 +277,7 @@ const Contact = () => {
               </div>
 
               <div>
-                <label
-                  htmlFor="subject"
-                  className="block text-xs font-semibold text-[#5f6c7b] uppercase tracking-widest mb-1"
-                >
+                <label htmlFor="subject" className="block text-xs font-semibold text-[#5f6c7b] uppercase tracking-widest mb-1">
                   Subject
                 </label>
                 <input
@@ -216,10 +290,7 @@ const Contact = () => {
               </div>
 
               <div>
-                <label
-                  htmlFor="message"
-                  className="block text-xs font-semibold text-[#5f6c7b] uppercase tracking-widest mb-1"
-                >
+                <label htmlFor="message" className="block text-xs font-semibold text-[#5f6c7b] uppercase tracking-widest mb-1">
                   Message
                 </label>
                 <textarea
